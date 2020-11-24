@@ -27,7 +27,6 @@ class Tencent {
   static const String _METHOD_SHAREIMAGE = 'shareImage';
   static const String _METHOD_SHAREMUSIC = 'shareMusic';
   static const String _METHOD_SHAREWEBPAGE = 'shareWebpage';
-  static const String _METHOD_SHAREMINIAPP = 'shareMiniApp';
 
   static const String _METHOD_ONLOGINRESP = 'onLoginResp';
   static const String _METHOD_ONSHARERESP = 'onShareResp';
@@ -45,8 +44,6 @@ class Tencent {
   static const String _ARGUMENT_KEY_TARGETURL = 'targetUrl';
   static const String _ARGUMENT_KEY_APPNAME = 'appName';
   static const String _ARGUMENT_KEY_EXTINT = 'extInt';
-  static const String _ARGUMENT_KEY_MINIAPPID = "miniAppId";
-  static const String _ARGUMENT_KEY_MINIAPPURL = "miniAppUrl";
 
   static const String _SCHEME_FILE = 'file';
 
@@ -300,43 +297,6 @@ class Tencent {
         _ARGUMENT_KEY_TARGETURL: targetUrl,
         if (appName?.isNotEmpty ?? false) _ARGUMENT_KEY_APPNAME: appName,
         _ARGUMENT_KEY_EXTINT: extInt,
-      },
-    );
-  }
-
-  // 参数	是否必传	类型	参数说明
-  // QQShare.SHARE_TO_QQ_KEY_TYPE	必填	Int	分享的类型。分享小程序填QQShare.SHARE_TO_QQ_MINI_PROGRAM
-  // QQShare.SHARE_TO_QQ_TITLE	必填	String	分享的标题, 最长30个字符。如果不填，默认使用小程序名称作为标题
-  // QQShare.SHARE_TO_QQ_SUMMARY	必填	String	分享的消息摘要，最长40个字符。若不填，默认使用小程序后台注册的描述作为摘要
-  // QQShare.SHARE_TO_QQ_TARGET_URL	必填	String	兼容低版本的网页链接
-  // QQShare.SHARE_TO_QQ_IMAGE_URL	必填	String	分享预览封面图的url，或者是本地图的路径
-  // QQShare.SHARE_TO_QQ_MINI_PROGRAM_APPID	必填	String	分享的小程序appid，小程序与当前应用必须为同一个主体
-  // QQShare.SHARE_TO_QQ_MINI_PROGRAM_TYPE	可选	String	3表示正式版，1表示体验版
-  // QQShare.SHARE_TO_QQ_MINI_PROGRAM_PATH	必填	String	分享的小程序页面路径，如不需要指定，请填主页路径
-  //
-  //
-  /// 分享 - 小程序
-  Future<void> shareMiniApp({
-    @required int scene,
-    @required String title,
-    String summary,
-    Uri imageUri,
-    @required String targetUrl,
-    @required String miniAppId,
-    String miniAppUrl
-  }) {
-    assert(title?.isNotEmpty ?? false);
-    assert(targetUrl?.isNotEmpty ?? false);
-    return _channel.invokeMethod<void>(
-      _METHOD_SHAREMINIAPP,
-      <String, dynamic>{
-        _ARGUMENT_KEY_SCENE: scene,
-        _ARGUMENT_KEY_TITLE: title,
-        if (summary?.isNotEmpty ?? false) _ARGUMENT_KEY_SUMMARY: summary,
-        if (imageUri != null) _ARGUMENT_KEY_IMAGEURI: imageUri.toString(),
-        _ARGUMENT_KEY_TARGETURL: targetUrl,
-        _ARGUMENT_KEY_MINIAPPID: miniAppId,
-        _ARGUMENT_KEY_MINIAPPURL: miniAppUrl,
       },
     );
   }

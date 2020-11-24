@@ -66,7 +66,6 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
     private static final String METHOD_SHAREIMAGE = "shareImage";
     private static final String METHOD_SHAREMUSIC = "shareMusic";
     private static final String METHOD_SHAREWEBPAGE = "shareWebpage";
-    private static final String METHOD_SHAREMINIAPP = "shareMiniApp";
 
     private static final String METHOD_ONLOGINRESP = "onLoginResp";
     private static final String METHOD_ONSHARERESP = "onShareResp";
@@ -84,8 +83,6 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
     private static final String ARGUMENT_KEY_TARGETURL = "targetUrl";
     private static final String ARGUMENT_KEY_APPNAME = "appName";
     private static final String ARGUMENT_KEY_EXTINT = "extInt";
-    private static final String ARGUMENT_KEY_MINIAPPID = "miniAppId";
-    private static final String ARGUMENT_KEY_MINIAPPURL = "miniAppUrl";
 
     private static final String ARGUMENT_KEY_RESULT_RET = "ret";
     private static final String ARGUMENT_KEY_RESULT_MSG = "msg";
@@ -170,8 +167,6 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
             shareMusic(call, result);
         } else if (METHOD_SHAREWEBPAGE.equals(call.method)) {
             shareWebpage(call, result);
-        } else if (METHOD_SHAREMINIAPP.equals(call.method)) {
-            shaerMiniApp(call, result);
         } else {
             result.notImplemented();
         }
@@ -423,113 +418,6 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
                     params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, uris);
                 }
                 params.putString(QzoneShare.SHARE_TO_QQ_TARGET_URL, targetUrl);
-                if (tencent != null) {
-                    tencent.shareToQzone(activity, params, shareListener);
-                }
-                break;
-            default:
-                break;
-        }
-        result.success(null);
-    }
-
-
-
-//    QQShare.SHARE_TO_QQ_KEY_TYPE	必填	Int	分享的类型。分享小程序填QQShare.SHARE_TO_QQ_MINI_PROGRAM
-//    QQShare.SHARE_TO_QQ_TITLE	必填	String	分享的标题, 最长30个字符。如果不填，默认使用小程序名称作为标题
-//    QQShare.SHARE_TO_QQ_SUMMARY	必填	String	分享的消息摘要，最长40个字符。若不填，默认使用小程序后台注册的描述作为摘要
-//    QQShare.SHARE_TO_QQ_TARGET_URL	必填	String	兼容低版本的网页链接
-//    QQShare.SHARE_TO_QQ_IMAGE_URL	必填	String	分享预览封面图的url，或者是本地图的路径
-//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_APPID	必填	String	分享的小程序appid，小程序与当前应用必须为同一个主体
-//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_TYPE	可选	String	3表示正式版，1表示体验版
-//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_PATH	必填	String	分享的小程序页面路径，如不需要指定，请填主页路径
-
-
-
-    // -=-=-=-=-=-=  上面是分享到QQ   下面是分享到QQ空间 -=-=-=-=-=-=-=-=-=-=
-
-
-//    （模式3）分享QQ小程序到QQ空间
-//    可以从外部app分享到手Q空间为一个QQ小程序，并可以指定预览图、文案、小程序路径：
-//    接口参数
-//    调用分享接口分享QQ小程序的params参数说明如下：
-//    参数	是否必传	类型	参数说明
-//    QzoneShare.SHARE_TO_QZONE_KEY_TYPE	必填	Int	分享的类型。分享小程序填QQShare.SHARE_TO_QQ_MINI_PROGRAM
-//    QQShare.SHARE_TO_QQ_TITLE	可选	String	分享的标题, 最长30个字符。如果不填，默认使用小程序名称作为标题
-//    QQShare.SHARE_TO_QQ_SUMMARY	可选	String	分享的消息摘要，最长40个字符。若不填，默认使用小程序后台注册的描述作为摘要
-//    QQShare.SHARE_TO_QQ_IMAGE_URL	必填
-//    ArrayList<String>
-//    分享预览封面图的url，或者是本地图的路径
-//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_APPID	必填	String	分享的小程序appid，小程序与当前应用必须为同一个主体
-//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_TYPE	可选	String	3表示正式版，1表示体验版
-//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_PATH	必填	String	分享的小程序页面路径，如不需要指定，请填主页路径
-
-
-    private void shaerMiniApp(MethodCall call, MethodChannel.Result result) {
-        int scene = call.argument(ARGUMENT_KEY_SCENE);
-        String title = call.argument(ARGUMENT_KEY_TITLE);
-        String summary = call.argument(ARGUMENT_KEY_SUMMARY);
-        String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
-        String targetUrl = call.argument(ARGUMENT_KEY_TARGETURL);
-        String appName = call.argument(ARGUMENT_KEY_APPNAME);
-        String miniAppId = call.argument(ARGUMENT_KEY_MINIAPPID);
-        String miniAppUrl = call.argument(ARGUMENT_KEY_MINIAPPURL);
-
-        Bundle params = new Bundle();
-        switch (scene) {
-            case TencentScene.SCENE_QQ:
-                params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_MINI_PROGRAM);
-                params.putString(QQShare.SHARE_TO_QQ_TITLE, title);
-                if (!TextUtils.isEmpty(summary)) {
-                    params.putString(QQShare.SHARE_TO_QQ_SUMMARY, summary);
-                }
-                if (!TextUtils.isEmpty(imageUri)) {
-                    Uri uri = Uri.parse(imageUri);
-                    if (TextUtils.equals(SCHEME_FILE, uri.getScheme())) {
-                        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, uri.getPath());
-                    } else {
-                        params.putString(QQShare.SHARE_TO_QQ_IMAGE_URL, imageUri);
-                    }
-                }
-                params.putString(QQShare.SHARE_TO_QQ_TARGET_URL, targetUrl);
-                if (!TextUtils.isEmpty(appName)) {
-                    params.putString(QQShare.SHARE_TO_QQ_APP_NAME, appName);
-                }
-                if (!TextUtils.isEmpty(miniAppId)) {
-                    params.putString(QQShare.SHARE_TO_QQ_MINI_PROGRAM_APPID, appName);
-                }
-                if (!TextUtils.isEmpty(miniAppUrl)) {
-                    params.putString(QQShare.SHARE_TO_QQ_MINI_PROGRAM_PATH, appName);
-                }
-                if (!TextUtils.isEmpty(appName)) {
-                    params.putString(QQShare.SHARE_TO_QQ_APP_NAME, appName);
-                }
-                if (tencent != null) {
-                    tencent.shareToQQ(activity, params, shareListener);
-                }
-                break;
-            case TencentScene.SCENE_QZONE:
-                params.putInt(QzoneShare.SHARE_TO_QZONE_KEY_TYPE, QzoneShare.SHARE_TO_QZONE_TYPE_MINI_PROGRAM);
-                params.putString(QzoneShare.SHARE_TO_QQ_TITLE, title);
-                if (!TextUtils.isEmpty(summary)) {
-                    params.putString(QzoneShare.SHARE_TO_QQ_SUMMARY, summary);
-                }
-                if (!TextUtils.isEmpty(imageUri)) {
-                    ArrayList<String> uris = new ArrayList<>();
-                    Uri uri = Uri.parse(imageUri);
-                    if (TextUtils.equals(SCHEME_FILE, uri.getScheme())) {
-                        uris.add(uri.getPath());
-                    } else {
-                        uris.add(imageUri);
-                    }
-                    params.putStringArrayList(QzoneShare.SHARE_TO_QQ_IMAGE_URL, uris);
-                }
-                if (!TextUtils.isEmpty(miniAppId)) {
-                    params.putString(QQShare.SHARE_TO_QQ_MINI_PROGRAM_APPID, appName);
-                }
-                if (!TextUtils.isEmpty(miniAppUrl)) {
-                    params.putString(QQShare.SHARE_TO_QQ_MINI_PROGRAM_PATH, appName);
-                }
                 if (tencent != null) {
                     tencent.shareToQzone(activity, params, shareListener);
                 }
