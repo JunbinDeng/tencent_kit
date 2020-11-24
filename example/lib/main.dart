@@ -183,6 +183,18 @@ class _HomeState extends State<Home> {
               );
             },
           ),
+          ListTile(
+            title: const Text('小程序分享'),
+            onTap: () {
+              _tencent.shareMiniApp(
+                  scene: TencentScene.SCENE_QQ,
+                  title: 'title',
+                  targetUrl: 'https://www.baidu.com/',
+                  miniAppId: '1110183363',
+                  miniAppUrl: 'aaaa'
+              );
+            },
+          ),
         ],
       ),
     );
