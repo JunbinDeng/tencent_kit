@@ -89,17 +89,14 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('获取用户信息'),
             onTap: () async {
-              if (_loginResp != null &&
-                  _loginResp.isSuccessful() &&
-                  !_loginResp.isExpired()) {
+              if (_loginResp != null && _loginResp.isSuccessful() && !_loginResp.isExpired()) {
                 TencentUserInfoResp userInfo = await _tencent.getUserInfo(
                   appId: _TENCENT_APPID,
                   openid: _loginResp.openid,
                   accessToken: _loginResp.accessToken,
                 );
                 if (userInfo.isSuccessful()) {
-                  _showTips('用户信息',
-                      '${userInfo.nickname} - ${userInfo.gender} - ${userInfo.genderType}');
+                  _showTips('用户信息', '${userInfo.nickname} - ${userInfo.gender} - ${userInfo.genderType}');
                 } else {
                   _showTips('用户信息', '${userInfo.ret} - ${userInfo.msg}');
                 }
@@ -109,18 +106,14 @@ class _HomeState extends State<Home> {
           ListTile(
             title: const Text('获取UnionID'),
             onTap: () async {
-              if (_loginResp != null &&
-                  _loginResp.isSuccessful() &&
-                  !_loginResp.isExpired()) {
+              if (_loginResp != null && _loginResp.isSuccessful() && !_loginResp.isExpired()) {
                 TencentUnionidResp unionid = await _tencent.getUnionId(
                   accessToken: _loginResp.accessToken,
                 );
                 if (unionid.isSuccessful()) {
-                  _showTips('UnionID',
-                      '${unionid.clientId} - ${unionid.openid} - ${unionid.unionid}');
+                  _showTips('UnionID', '${unionid.clientId} - ${unionid.openid} - ${unionid.unionid}');
                 } else {
-                  _showTips('UnionID',
-                      '${unionid.error} - ${unionid.errorDescription}');
+                  _showTips('UnionID', '${unionid.error} - ${unionid.errorDescription}');
                 }
               }
             },
@@ -150,8 +143,7 @@ class _HomeState extends State<Home> {
               Response resp = await client
                   .newCall(RequestBuilder()
                       .get()
-                      .url(HttpUrl.parse(
-                          'https://www.baidu.com/img/bd_logo1.png?where=super'))
+                      .url(HttpUrl.parse('https://www.baidu.com/img/bd_logo1.png?where=super'))
                       .build())
                   .enqueue();
               if (resp.isSuccessful()) {
@@ -183,15 +175,36 @@ class _HomeState extends State<Home> {
               );
             },
           ),
+          ListTile(
+            title: const Text('小程序分享'),
+            onTap: () {
+              _tencent.shareMiniApp(
+                scene: TencentScene.SCENE_QQ,
+                title: 'title',
+                targetUrl: 'https://www.baidu.com/',
+                miniAppId: '1110183363',
+                miniAppUrl: 'aaaa'
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
   void _showTips(String title, String content) {
-    showDialog<void>(
+    // showDialog<void>(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return AlertDialog(
+    //       title: Text(title),
+    //       content: Text(content),
+    //     );
+    //   },
+    // );
+    showModalBottomSheet<void>(
       context: context,
-      builder: (BuildContext context) {
+      builder : (BuildContext context) {
         return AlertDialog(
           title: Text(title),
           content: Text(content),
