@@ -1,4 +1,4 @@
-package io.github.v7lin.tencent_kit;
+package io.github.v7lin.tencentkit;
 
 import androidx.annotation.NonNull;
 
