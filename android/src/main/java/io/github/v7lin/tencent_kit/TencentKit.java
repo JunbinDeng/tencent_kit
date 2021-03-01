@@ -1,4 +1,4 @@
-package io.github.v7lin.tencentkit;
+package io.github.v7lin.tencent_kit;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -10,7 +10,6 @@ import android.content.pm.ProviderInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,7 +35,7 @@ import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
-import io.github.v7lin.tencentkit.content.TencentKitFileProvider;
+import io.github.v7lin.tencent_kit.content.TencentKitFileProvider;
 
 public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegistry.ActivityResultListener {
 
@@ -144,13 +143,9 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
 //            final String universalLink = call.argument(ARGUMENT_KEY_UNIVERSALLINK);
             String authority = null;
             try {
-                ProviderInfo providerInfo = applicationContext.getPackageManager().getProviderInfo(
-                                new ComponentName(applicationContext, TencentKitFileProvider.class),
-                                PackageManager.MATCH_DEFAULT_ONLY
-                        );
+                ProviderInfo providerInfo = applicationContext.getPackageManager().getProviderInfo(new ComponentName(applicationContext, TencentKitFileProvider.class), PackageManager.MATCH_DEFAULT_ONLY);
                 authority = providerInfo.authority;
             } catch (PackageManager.NameNotFoundException e) {
-                Log.i("tencentKit",e.getMessage());
             }
             if (!TextUtils.isEmpty(authority)) {
                 tencent = Tencent.createInstance(appId, applicationContext, authority);
@@ -198,18 +193,12 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
             try {
                 if (o != null && o instanceof JSONObject) {
                     JSONObject object = (JSONObject) o;
-                    int ret = !object.isNull(ARGUMENT_KEY_RESULT_RET) ?
-                            object.getInt(ARGUMENT_KEY_RESULT_RET) :
-                            TencentRetCode.RET_FAILED;
-                    String msg = !object.isNull(ARGUMENT_KEY_RESULT_MSG) ?
-                            object.getString(ARGUMENT_KEY_RESULT_MSG) : null;
+                    int ret = !object.isNull(ARGUMENT_KEY_RESULT_RET) ? object.getInt(ARGUMENT_KEY_RESULT_RET) : TencentRetCode.RET_FAILED;
+                    String msg = !object.isNull(ARGUMENT_KEY_RESULT_MSG) ? object.getString(ARGUMENT_KEY_RESULT_MSG) : null;
                     if (ret == TencentRetCode.RET_SUCCESS) {
-                        String openId = !object.isNull(ARGUMENT_KEY_RESULT_OPENID) ?
-                                object.getString(ARGUMENT_KEY_RESULT_OPENID) : null;
-                        String accessToken = !object.isNull(ARGUMENT_KEY_RESULT_ACCESS_TOKEN) ?
-                                object.getString(ARGUMENT_KEY_RESULT_ACCESS_TOKEN) : null;
-                        int expiresIn = !object.isNull(ARGUMENT_KEY_RESULT_EXPIRES_IN) ?
-                                object.getInt(ARGUMENT_KEY_RESULT_EXPIRES_IN) : 0;
+                        String openId = !object.isNull(ARGUMENT_KEY_RESULT_OPENID) ? object.getString(ARGUMENT_KEY_RESULT_OPENID) : null;
+                        String accessToken = !object.isNull(ARGUMENT_KEY_RESULT_ACCESS_TOKEN) ? object.getString(ARGUMENT_KEY_RESULT_ACCESS_TOKEN) : null;
+                        int expiresIn = !object.isNull(ARGUMENT_KEY_RESULT_EXPIRES_IN) ? object.getInt(ARGUMENT_KEY_RESULT_EXPIRES_IN) : 0;
                         long createAt = System.currentTimeMillis();
                         if (!TextUtils.isEmpty(openId) && !TextUtils.isEmpty(accessToken)) {
                             map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_SUCCESS);
@@ -308,15 +297,12 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
             PackageManager packageManager = applicationContext.getPackageManager();
             List<PackageInfo> infos = packageManager.getInstalledPackages(0);
             if (infos != null && !infos.isEmpty()) {
-                for (String packageName :
-                        Arrays.asList("com.tencent.mobileqq", "com.tencent.tim", "com.tencent.qqlite")) {
+                for (String packageName : Arrays.asList("com.tencent.mobileqq", "com.tencent.tim", "com.tencent.qqlite")) {
                     for (PackageInfo info : infos) {
                         if (packageName.equals(info.packageName)) {
                             sendIntent.setPackage(packageName);
                             if (sendIntent.resolveActivity(applicationContext.getPackageManager()) != null) {
-                                sendIntent.setComponent(new ComponentName(
-                                        packageName, "com.tencent.mobileqq.activity.JumpActivity")
-                                );
+                                sendIntent.setComponent(new ComponentName(packageName, "com.tencent.mobileqq.activity.JumpActivity"));
                                 activity.startActivity(sendIntent);
                                 break;
                             }
@@ -333,7 +319,7 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
         if (scene == TencentScene.SCENE_QQ) {
             String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
             String appName = call.argument(ARGUMENT_KEY_APPNAME);
-            final int extInt = call.argument(ARGUMENT_KEY_EXTINT);
+            int extInt = call.argument(ARGUMENT_KEY_EXTINT);
 
             Bundle params = new Bundle();
             params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_IMAGE);
@@ -354,11 +340,11 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
         if (scene == TencentScene.SCENE_QQ) {
             String title = call.argument(ARGUMENT_KEY_TITLE);
             String summary = call.argument(ARGUMENT_KEY_SUMMARY);
-            final String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
-            final String musicUrl = call.argument(ARGUMENT_KEY_MUSICURL);
-            final String targetUrl = call.argument(ARGUMENT_KEY_TARGETURL);
-            final String appName = call.argument(ARGUMENT_KEY_APPNAME);
-            final int extInt = call.argument(ARGUMENT_KEY_EXTINT);
+            String imageUri = call.argument(ARGUMENT_KEY_IMAGEURI);
+            String musicUrl = call.argument(ARGUMENT_KEY_MUSICURL);
+            String targetUrl = call.argument(ARGUMENT_KEY_TARGETURL);
+            String appName = call.argument(ARGUMENT_KEY_APPNAME);
+            int extInt = call.argument(ARGUMENT_KEY_EXTINT);
 
             Bundle params = new Bundle();
             params.putInt(QQShare.SHARE_TO_QQ_KEY_TYPE, QQShare.SHARE_TO_QQ_TYPE_AUDIO);
@@ -449,29 +435,36 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
     }
 
 
-//    QQShare.SHARE_TO_QQ_KEY_TYPE必填Int分享的类型。分享小程序填QQShare.SHARE_TO_QQ_MINI_PROGRAM
-//    QQShare.SHARE_TO_QQ_TITLE	必填	String分享的标题, 最长30个字符。如果不填，默认使用小程序名称作为标题
-//    QQShare.SHARE_TO_QQ_SUMMARY必填String分享的消息摘要，最长40个字符。若不填，默认使用小程序后台注册的描述作为摘要
-//    QQShare.SHARE_TO_QQ_TARGET_URL必填	String兼容低版本的网页链接
-//    QQShare.SHARE_TO_QQ_IMAGE_URL	必填	String分享预览封面图的url，或者是本地图的路径
-//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_APPID必填	String分享的小程序appid，小程序与当前应用必须为同一个主体
-//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_TYPE	可选	String3表示正式版，1表示体验版
-//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_PATH	必填	String分享的小程序页面路径，如不需要指定，请填主页路径
-// -=-=-=-=-=-=  上面是分享到QQ下面是分享到QQ空间 -=-=-=-=-=-=-=-=-=-=
+
+
+    //    QQShare.SHARE_TO_QQ_KEY_TYPE	必填	Int	分享的类型。分享小程序填QQShare.SHARE_TO_QQ_MINI_PROGRAM
+//    QQShare.SHARE_TO_QQ_TITLE	必填	String	分享的标题, 最长30个字符。如果不填，默认使用小程序名称作为标题
+//    QQShare.SHARE_TO_QQ_SUMMARY	必填	String	分享的消息摘要，最长40个字符。若不填，默认使用小程序后台注册的描述作为摘要
+//    QQShare.SHARE_TO_QQ_TARGET_URL	必填	String	兼容低版本的网页链接
+//    QQShare.SHARE_TO_QQ_IMAGE_URL	必填	String	分享预览封面图的url，或者是本地图的路径
+//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_APPID	必填	String	分享的小程序appid，小程序与当前应用必须为同一个主体
+//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_TYPE	可选	String	3表示正式版，1表示体验版
+//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_PATH	必填	String	分享的小程序页面路径，如不需要指定，请填主页路径
+
+
+
+    // -=-=-=-=-=-=  上面是分享到QQ   下面是分享到QQ空间 -=-=-=-=-=-=-=-=-=-=
+
+
 //    （模式3）分享QQ小程序到QQ空间
 //    可以从外部app分享到手Q空间为一个QQ小程序，并可以指定预览图、文案、小程序路径：
 //    接口参数
 //    调用分享接口分享QQ小程序的params参数说明如下：
-//    参数是否必传类型参数说明
-//    QzoneShare.SHARE_TO_QZONE_KEY_TYPE必填	Int	分享的类型。分享小程序填QQShare.SHARE_TO_QQ_MINI_PROGRAM
-//    QQShare.SHARE_TO_QQ_TITLE	可选	String分享的标题, 最长30个字符。如果不填，默认使用小程序名称作为标题
-//    QQShare.SHARE_TO_QQ_SUMMARY可选String分享的消息摘要，最长40个字符。若不填，默认使用小程序后台注册的描述作为摘要
+//    参数	是否必传	类型	参数说明
+//    QzoneShare.SHARE_TO_QZONE_KEY_TYPE	必填	Int	分享的类型。分享小程序填QQShare.SHARE_TO_QQ_MINI_PROGRAM
+//    QQShare.SHARE_TO_QQ_TITLE	可选	String	分享的标题, 最长30个字符。如果不填，默认使用小程序名称作为标题
+//    QQShare.SHARE_TO_QQ_SUMMARY	可选	String	分享的消息摘要，最长40个字符。若不填，默认使用小程序后台注册的描述作为摘要
 //    QQShare.SHARE_TO_QQ_IMAGE_URL	必填
 //    ArrayList<String>
 //    分享预览封面图的url，或者是本地图的路径
-//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_APPID必填	String分享的小程序appid，小程序与当前应用必须为同一个主体
-//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_TYPE	可选	String3表示正式版，1表示体验版
-//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_PATH	必填	String分享的小程序页面路径，如不需要指定，请填主页路径
+//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_APPID	必填	String	分享的小程序appid，小程序与当前应用必须为同一个主体
+//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_TYPE	可选	String	3表示正式版，1表示体验版
+//    QQShare.SHARE_TO_QQ_MINI_PROGRAM_PATH	必填	String	分享的小程序页面路径，如不需要指定，请填主页路径
 
 
     private void shaerMiniApp(MethodCall call, MethodChannel.Result result) {
@@ -553,10 +546,8 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
             try {
                 if (o != null && o instanceof JSONObject) {
                     JSONObject object = (JSONObject) o;
-                    int ret = !object.isNull(ARGUMENT_KEY_RESULT_RET) ? object.getInt(ARGUMENT_KEY_RESULT_RET) :
-                            TencentRetCode.RET_FAILED;
-                    String msg = !object.isNull(ARGUMENT_KEY_RESULT_MSG) ? object.getString(ARGUMENT_KEY_RESULT_MSG) :
-                            null;
+                    int ret = !object.isNull(ARGUMENT_KEY_RESULT_RET) ? object.getInt(ARGUMENT_KEY_RESULT_RET) : TencentRetCode.RET_FAILED;
+                    String msg = !object.isNull(ARGUMENT_KEY_RESULT_MSG) ? object.getString(ARGUMENT_KEY_RESULT_MSG) : null;
                     if (ret == TencentRetCode.RET_SUCCESS) {
                         map.put(ARGUMENT_KEY_RESULT_RET, TencentRetCode.RET_SUCCESS);
                     } else {
@@ -616,7 +607,6 @@ public class TencentKit implements MethodChannel.MethodCallHandler, PluginRegist
         try {
             packageInfo = context.getPackageManager().getPackageInfo(packageName, 0);
         } catch (PackageManager.NameNotFoundException e) {
-            Log.i("tencentKit",e.getMessage());
         }
         return packageInfo != null;
     }

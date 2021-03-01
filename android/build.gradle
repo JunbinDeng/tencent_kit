@@ -1,4 +1,4 @@
-group 'io.github.v7lin.tencentkit'
+group 'io.github.v7lin.tencent_kit'
 version '1.1.2'
 
 buildscript {
